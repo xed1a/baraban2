@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin the Wheel</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /*justify-content: center;*/
+            height: 100vh;
+            background: linear-gradient(135deg, #f2f2f2, #e0e0e0);
+            font-family: Arial, sans-serif;
+        }
+        #wheel {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 10px solid #333;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        #pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 25px solid red;
+            z-index: 10;
+        }
+        .slice {
+            width: 50%;
+            height: 50%;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform-origin: 0 100%;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slice span {
+            transform: rotate(0deg);
+            position: absolute;
+            text-align: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+            width: 100px; /* Ширина контейнера тексту */
+            white-space: nowrap;
+            transform-origin: center;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #555;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wheel-container">
+    <div id="pointer"></div>
+    <div id="wheel"></div>
+</div>
+<button id="spin-button">Spin</button>
+<p id="result"></p>
+
+<script>
+    const prizes = [
+        "Rating your dick",
+        "BJ video",
+        "Personal greeting",
+        "10 sexy pics",
+        "5 hot videos",
+        "Audio with moans",
+        "Mystery box",
+        "50$ bundle",
+        "Live surprise",
+        "100$ bundle",
+        "Live pic",
+        "Strip video"
+    ];
+
+    const wheel = document.getElementById('wheel');
+    const spinButton = document.getElementById('spin-button');
+    let hasSpun = false;
+
+    // Create 12 evenly spaced slices
+    prizes.forEach((prize, i) => {
+        const slice = document.createElement('div');
+        slice.className = 'slice';
+        slice.style.background = `hsl(${(i * 360) / prizes.length}, 70%, 50%)`;
+        slice.style.transform = `rotate(${(i * 360) / prizes.length}deg) skewY(-30deg)`;
+
+        const textSpan = document.createElement('span');
+        textSpan.textContent = prize;
+        slice.appendChild(textSpan);
+        wheel.appendChild(slice);
+    });
+
+    function spinWheel() {
+        if (hasSpun) return;
+        hasSpun = true;
+        const randomRotation = Math.floor(Math.random() * 360 + 720); // spin at least 2 full rotations
+        wheel.style.transition = 'transform 4s ease-out';
+        wheel.style.transform = `rotate(${randomRotation}deg)`;
+        setTimeout(() => {
+            const selectedPrizeIndex = Math.floor((randomRotation % 360) / (360 / prizes.length));
+            document.getElementById('result').textContent = `You won: ${prizes[selectedPrizeIndex]}`;
+        }, 4000);
+    }
+
+    spinButton.addEventListener('click', spinWheel);
+</script>
+
+</body>
+</html>
